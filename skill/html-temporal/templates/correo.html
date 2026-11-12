@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Correo para copiar</title>
+</head>
+<body style="margin:0;background:#eef0f3;font-family:Arial,Helvetica,sans-serif;color:#1f2933;">
+
+<div style="max-width:680px;margin:0 auto;padding:16px;">
+  <div style="background:#1f2933;color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:12px;">
+    <div style="font-size:12px;opacity:.7;margin-bottom:4px;">ASUNTO</div>
+    <div id="asunto" style="font-size:16px;font-weight:bold;margin-bottom:10px;">ASUNTO DEL CORREO</div>
+    <button id="btn-asunto" style="background:#fff;color:#1f2933;border:0;border-radius:6px;padding:8px 12px;font-weight:bold;cursor:pointer;">Copiar asunto</button>
+    <button id="btn-correo" style="background:#c9a227;color:#1f2933;border:0;border-radius:6px;padding:8px 12px;font-weight:bold;cursor:pointer;margin-left:6px;">Copiar correo</button>
+    <span id="estado" style="font-size:13px;margin-left:8px;"></span>
+    <div style="font-size:12px;opacity:.7;margin-top:10px;">Esta página es temporal y se borra sola.</div>
+  </div>
+
+  <div style="background:#fff;border-radius:8px;padding:8px;">
+<div id="contenido">
+<!-- Todo lo de aquí adentro es lo que se copia. Solo estilos inline. -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:640px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#1f2933;">
+<tr><td style="padding:16px 20px;">
+
+<p style="margin:0 0 14px;">Hola equipo,</p>
+
+<p style="margin:0 0 14px;">Párrafo de introducción.</p>
+
+<h3 style="margin:22px 0 8px;font-size:16px;color:#0b3d5c;">Sección</h3>
+<ul style="margin:0 0 14px;padding-left:22px;">
+  <li style="margin-bottom:4px;"><b>Punto:</b> detalle.</li>
+  <li style="margin-bottom:4px;"><b>Punto:</b> detalle.</li>
+</ul>
+
+<h3 style="margin:22px 0 8px;font-size:16px;color:#0b3d5c;">Tabla</h3>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;margin:0 0 14px;border-collapse:collapse;font-size:14px;">
+<tr>
+<td style="padding:10px 12px;border:1px solid #e3e6ea;background:#f7f8fa;width:34%;vertical-align:top;"><b>Concepto</b></td>
+<td style="padding:10px 12px;border:1px solid #e3e6ea;vertical-align:top;">Descripción.</td>
+</tr>
+</table>
+
+<p style="margin:18px 0 4px;">Saludos,</p>
+<p style="margin:0;">Nombre</p>
+
+</td></tr>
+</table>
+</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var estado = document.getElementById('estado');
+  function avisar(t) { estado.textContent = t; setTimeout(function () { estado.textContent = ''; }, 2500); }
+  function copiarSeleccion(el) {
+    var r = document.createRange(); r.selectNodeContents(el);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    s.removeAllRanges(); return ok;
+  }
+  document.getElementById('btn-asunto').onclick = function () {
+    var t = document.getElementById('asunto').innerText;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject())
+      .then(function () { avisar('Asunto copiado'); })
+      .catch(function () { avisar(copiarSeleccion(document.getElementById('asunto')) ? 'Asunto copiado' : 'Selecciónalo a mano'); });
+  };
+  document.getElementById('btn-correo').onclick = function () {
+    var el = document.getElementById('contenido');
+    try {
+      var item = new ClipboardItem({
+        'text/html': new Blob([el.innerHTML], { type: 'text/html' }),
+        'text/plain': new Blob([el.innerText], { type: 'text/plain' })
+      });
+      navigator.clipboard.write([item]).then(function () { avisar('Correo copiado. Pégalo en tu correo.'); })
+        .catch(function () { avisar(copiarSeleccion(el) ? 'Correo copiado' : 'Selecciónalo a mano'); });
+    } catch (e) { avisar(copiarSeleccion(el) ? 'Correo copiado' : 'Selecciónalo a mano'); }
+  };
+})();
+</script>
+</body>
+</html>

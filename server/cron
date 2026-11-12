@@ -1,0 +1,4 @@
+# /etc/cron.d/html-temporal
+# Borra cada 5 minutos los HTML con más de 60 minutos. Ajusta la carpeta y
+# el -mmin si cambias TMP_HTML_DIR o TMP_HTML_TTL_MIN.
+*/5 * * * * root find /var/www/tmp-html -type f -name '*.html' -mmin +60 -delete
