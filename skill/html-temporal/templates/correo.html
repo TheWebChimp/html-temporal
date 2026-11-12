@@ -1,32 +1,71 @@
 <!doctype html>
-<html lang="es">
+<!--
+  Plantilla de correo para copiar y pegar.
+  - Modo inicial: data-modo en <html> = "claro" | "oscuro" | "sin-color".
+  - Cambia el asunto (#asunto) y lo que va dentro de #contenido.
+  - Dentro de #contenido usa SOLO estilos inline y SOLO los colores de la
+    paleta clara (abajo, PALETA). El modo oscuro los cambia por sus pares y
+    "sin color" los quita, así que un color fuera de la paleta no cambia.
+-->
+<html lang="es" data-modo="claro">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Correo para copiar</title>
+<style>
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; transition: background .2s; }
+  .barra { max-width: 680px; margin: 0 auto; padding: 16px; box-sizing: border-box; }
+  .panel { background: #1f2933; color: #fff; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .etq { font-size: 12px; opacity: .7; margin-bottom: 4px; }
+  #asunto { font-size: 16px; font-weight: bold; margin-bottom: 12px; }
+  .fila { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .btn { border: 0; border-radius: 6px; padding: 8px 12px; font-weight: bold; cursor: pointer; font-size: 14px; }
+  .btn-claro { background: #fff; color: #1f2933; }
+  .btn-acento { background: #c9a227; color: #1f2933; }
+  .modos { display: inline-flex; border: 1px solid rgba(255,255,255,.35); border-radius: 6px; overflow: hidden; margin-left: auto; }
+  .modos button { background: transparent; color: #fff; border: 0; padding: 7px 10px; cursor: pointer; font-size: 13px; }
+  .modos button[aria-pressed="true"] { background: #fff; color: #1f2933; font-weight: bold; }
+  #estado { font-size: 13px; min-height: 1em; }
+  .nota { font-size: 12px; opacity: .7; margin-top: 10px; }
+  .vista { border-radius: 8px; padding: 8px; transition: background .2s; }
+  html[data-modo="claro"] body { background: #eef0f3; }
+  html[data-modo="claro"] .vista { background: #ffffff; }
+  html[data-modo="oscuro"] body { background: #0d1014; }
+  html[data-modo="oscuro"] .vista { background: #1b1f24; }
+  html[data-modo="sin-color"] body { background: #eef0f3; }
+  html[data-modo="sin-color"] .vista { background: #ffffff; outline: 1px dashed #b8bec6; }
+  @media (max-width: 520px) { .modos { margin-left: 0; } }
+</style>
 </head>
-<body style="margin:0;background:#eef0f3;font-family:Arial,Helvetica,sans-serif;color:#1f2933;">
+<body>
 
-<div style="max-width:680px;margin:0 auto;padding:16px;">
-  <div style="background:#1f2933;color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:12px;">
-    <div style="font-size:12px;opacity:.7;margin-bottom:4px;">ASUNTO</div>
-    <div id="asunto" style="font-size:16px;font-weight:bold;margin-bottom:10px;">ASUNTO DEL CORREO</div>
-    <button id="btn-asunto" style="background:#fff;color:#1f2933;border:0;border-radius:6px;padding:8px 12px;font-weight:bold;cursor:pointer;">Copiar asunto</button>
-    <button id="btn-correo" style="background:#c9a227;color:#1f2933;border:0;border-radius:6px;padding:8px 12px;font-weight:bold;cursor:pointer;margin-left:6px;">Copiar correo</button>
-    <span id="estado" style="font-size:13px;margin-left:8px;"></span>
-    <div style="font-size:12px;opacity:.7;margin-top:10px;">Esta página es temporal y se borra sola.</div>
+<div class="barra">
+  <div class="panel">
+    <div class="etq">ASUNTO</div>
+    <div id="asunto">ASUNTO DEL CORREO</div>
+    <div class="fila">
+      <button class="btn btn-claro" id="btn-asunto" type="button">Copiar asunto</button>
+      <button class="btn btn-acento" id="btn-cuerpo" type="button">Copiar cuerpo</button>
+      <span id="estado" role="status"></span>
+      <div class="modos" role="group" aria-label="Colores al copiar">
+        <button type="button" data-modo="claro">Claro</button>
+        <button type="button" data-modo="oscuro">Oscuro</button>
+        <button type="button" data-modo="sin-color" title="Sin colores: toma los del correo de quien lo recibe">Sin color</button>
+      </div>
+    </div>
+    <div class="nota">Los colores del modo elegido se copian con el cuerpo. Esta página es temporal y se borra sola.</div>
   </div>
 
-  <div style="background:#fff;border-radius:8px;padding:8px;">
+  <div class="vista">
 <div id="contenido">
-<!-- Todo lo de aquí adentro es lo que se copia. Solo estilos inline. -->
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:640px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#1f2933;">
+<!-- Lo de aquí adentro es lo que se copia. Solo estilos inline y colores de la paleta. -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:640px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#1f2933;background-color:#ffffff;">
 <tr><td style="padding:16px 20px;">
 
 <p style="margin:0 0 14px;">Hola equipo,</p>
 
-<p style="margin:0 0 14px;">Párrafo de introducción.</p>
+<p style="margin:0 0 14px;">Párrafo de introducción. Un <a href="https://example.com" style="color:#0b62a3;">link</a> si hace falta.</p>
 
 <h3 style="margin:22px 0 8px;font-size:16px;color:#0b3d5c;">Sección</h3>
 <ul style="margin:0 0 14px;padding-left:22px;">
@@ -37,10 +76,12 @@
 <h3 style="margin:22px 0 8px;font-size:16px;color:#0b3d5c;">Tabla</h3>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;margin:0 0 14px;border-collapse:collapse;font-size:14px;">
 <tr>
-<td style="padding:10px 12px;border:1px solid #e3e6ea;background:#f7f8fa;width:34%;vertical-align:top;"><b>Concepto</b></td>
+<td style="padding:10px 12px;border:1px solid #e3e6ea;background-color:#f7f8fa;width:34%;vertical-align:top;"><b>Concepto</b></td>
 <td style="padding:10px 12px;border:1px solid #e3e6ea;vertical-align:top;">Descripción.</td>
 </tr>
 </table>
+
+<p style="margin:0 0 14px;color:#5f6b7a;font-size:13px;">Nota secundaria en gris.</p>
 
 <p style="margin:18px 0 4px;">Saludos,</p>
 <p style="margin:0;">Nombre</p>
@@ -53,30 +94,88 @@
 
 <script>
 (function () {
+  // Colores permitidos dentro de #contenido (modo claro) y su par oscuro.
+  var PALETA = {
+    '#1f2933': '#e6e9ed', // texto
+    '#0b3d5c': '#8cc4ea', // títulos
+    '#0b62a3': '#7cb8ec', // links
+    '#5f6b7a': '#a3adb8', // texto secundario
+    '#ffffff': '#1b1f24', // fondo
+    '#f7f8fa': '#262b31', // fondo de celda destacada
+    '#e3e6ea': '#3a4048'  // bordes
+  };
+  var BORDE_NEUTRO = 'rgba(128,128,128,0.35)';
+
+  var raiz = document.documentElement;
+  var contenido = document.getElementById('contenido');
   var estado = document.getElementById('estado');
-  function avisar(t) { estado.textContent = t; setTimeout(function () { estado.textContent = ''; }, 2500); }
+  var nodos = [contenido].concat(Array.prototype.slice.call(contenido.querySelectorAll('[style]')));
+  nodos.forEach(function (el) { el.setAttribute('data-estilo-claro', el.getAttribute('style') || ''); });
+
+  function aOscuro(css) {
+    return css.replace(/#[0-9a-f]{6}\b/gi, function (hex) { return PALETA[hex.toLowerCase()] || hex; });
+  }
+  function aSinColor(css) {
+    return css.split(';').map(function (d) {
+      var prop = d.split(':')[0].trim().toLowerCase();
+      if (prop === 'color' || prop === 'background' || prop === 'background-color') return '';
+      if (/^border/.test(prop)) return d.replace(/#[0-9a-f]{6}\b/gi, BORDE_NEUTRO);
+      return d;
+    }).filter(function (d) { return d.trim(); }).join(';');
+  }
+  function aplicar(modo) {
+    if (['claro', 'oscuro', 'sin-color'].indexOf(modo) < 0) modo = 'claro';
+    raiz.setAttribute('data-modo', modo);
+    nodos.forEach(function (el) {
+      var base = el.getAttribute('data-estilo-claro');
+      var css = modo === 'oscuro' ? aOscuro(base) : modo === 'sin-color' ? aSinColor(base) : base;
+      if (css) el.setAttribute('style', css); else el.removeAttribute('style');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.modos button'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-modo') === modo));
+    });
+  }
+
+  aplicar(raiz.getAttribute('data-modo'));
+
+  Array.prototype.forEach.call(document.querySelectorAll('.modos button'), function (b) {
+    b.onclick = function () { aplicar(b.getAttribute('data-modo')); };
+  });
+
+  function avisar(t) { estado.textContent = t; clearTimeout(avisar.t); avisar.t = setTimeout(function () { estado.textContent = ''; }, 2500); }
+
+  // Copia solo el HTML limpio (sin los data-estilo-claro).
+  function htmlLimpio() {
+    var copia = contenido.cloneNode(true);
+    Array.prototype.forEach.call(copia.querySelectorAll('[data-estilo-claro]'), function (el) { el.removeAttribute('data-estilo-claro'); });
+    copia.removeAttribute('data-estilo-claro');
+    return copia.innerHTML;
+  }
   function copiarSeleccion(el) {
     var r = document.createRange(); r.selectNodeContents(el);
     var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
     var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
     s.removeAllRanges(); return ok;
   }
+
   document.getElementById('btn-asunto').onclick = function () {
-    var t = document.getElementById('asunto').innerText;
+    var el = document.getElementById('asunto');
+    var t = el.innerText.trim();
     (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject())
       .then(function () { avisar('Asunto copiado'); })
-      .catch(function () { avisar(copiarSeleccion(document.getElementById('asunto')) ? 'Asunto copiado' : 'Selecciónalo a mano'); });
+      .catch(function () { avisar(copiarSeleccion(el) ? 'Asunto copiado' : 'Selecciónalo a mano'); });
   };
-  document.getElementById('btn-correo').onclick = function () {
-    var el = document.getElementById('contenido');
+  document.getElementById('btn-cuerpo').onclick = function () {
+    var modo = raiz.getAttribute('data-modo');
+    var ok = 'Cuerpo copiado (' + (modo === 'sin-color' ? 'sin color' : modo) + ')';
     try {
       var item = new ClipboardItem({
-        'text/html': new Blob([el.innerHTML], { type: 'text/html' }),
-        'text/plain': new Blob([el.innerText], { type: 'text/plain' })
+        'text/html': new Blob([htmlLimpio()], { type: 'text/html' }),
+        'text/plain': new Blob([contenido.innerText], { type: 'text/plain' })
       });
-      navigator.clipboard.write([item]).then(function () { avisar('Correo copiado. Pégalo en tu correo.'); })
-        .catch(function () { avisar(copiarSeleccion(el) ? 'Correo copiado' : 'Selecciónalo a mano'); });
-    } catch (e) { avisar(copiarSeleccion(el) ? 'Correo copiado' : 'Selecciónalo a mano'); }
+      navigator.clipboard.write([item]).then(function () { avisar(ok); })
+        .catch(function () { avisar(copiarSeleccion(contenido) ? ok : 'Selecciónalo a mano'); });
+    } catch (e) { avisar(copiarSeleccion(contenido) ? ok : 'Selecciónalo a mano'); }
   };
 })();
 </script>

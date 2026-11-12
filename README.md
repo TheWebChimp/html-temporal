@@ -10,7 +10,17 @@ http: 200
 expira: ~11:30 Mexico_City (el cron borra cada 5 min)
 ```
 
-La página trae los botones **Copiar asunto** y **Copiar correo**. El correo se copia con formato (`text/html` + `text/plain`) y se pega bien en Gmail y Outlook.
+Los correos traen los botones **Copiar asunto** y **Copiar cuerpo**. El cuerpo se copia con formato (`text/html` + `text/plain`) y se pega bien en Gmail y Outlook.
+
+Como el formato incluye los colores, la página tiene un selector de colores:
+
+| Modo | Qué se copia |
+|---|---|
+| **Claro** | Texto oscuro sobre fondo blanco |
+| **Oscuro** | Texto claro sobre fondo oscuro |
+| **Sin color** | Sin colores ni fondos: toma el tema del correo de quien lo recibe |
+
+Claude elige el modo inicial según lo que pidas ("en modo oscuro", "sin colores"). Se puede cambiar en la página antes de copiar.
 
 ## Cómo funciona
 
@@ -80,13 +90,13 @@ Si cambias la vida o la carpeta, ajusta también el `-mmin` y la ruta en el cron
 install.sh                         instalador
 skill/html-temporal/SKILL.md       instrucciones para Claude
 skill/html-temporal/publish.sh     publica un archivo y devuelve la URL
-skill/html-temporal/templates/     plantilla de correo con botones de copiar
+skill/html-temporal/templates/     plantilla de correo: copiar asunto/cuerpo, modo claro/oscuro/sin color
 server/                            Apache, nginx y cron
 ```
 
 ## English
 
-A Claude Code skill that publishes throwaway HTML pages (copy-paste-ready emails, tables, messages) to a folder on your own web server and returns the link. A cron job deletes them after an hour. Run `./install.sh --dir <served dir> --url <public url>`, add the Apache or nginx snippet from `server/`, and install the cron. Anyone with the link can open the page until it expires, so don't publish secrets.
+A Claude Code skill that publishes throwaway HTML pages (copy-paste-ready emails with light/dark/no-color modes, tables, messages) to a folder on your own web server and returns the link. A cron job deletes them after an hour. Run `./install.sh --dir <served dir> --url <public url>`, add the Apache or nginx snippet from `server/`, and install the cron. Anyone with the link can open the page until it expires, so don't publish secrets.
 
 ## Licencia
 
