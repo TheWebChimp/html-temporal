@@ -7,6 +7,8 @@ description: Crear un HTML temporal en una URL pública que el usuario abre para
 
 Páginas desechables en una carpeta que sirve tu web server. La URL y la carpeta están en `config.env`, junto a este archivo.
 
+Si el proyecto tiene un `.claude/html-temporal.env` (en su raíz o en una carpeta de arriba), ese manda: cada proyecto publica en su propio dominio. Corre `publish.sh` desde la carpeta del proyecto para que lo encuentre.
+
 ## Pasos
 1. Escribe el HTML en un directorio temporal (no en el repo del proyecto).
 2. Publica con `publish.sh <archivo.html> <slug-corto>`, que está en la misma carpeta que este SKILL.md.

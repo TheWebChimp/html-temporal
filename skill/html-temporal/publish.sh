@@ -4,8 +4,9 @@
 #
 # Uso: publish.sh <archivo.html> [slug]
 #
-# Configuración: config.env junto a este script (lo crea install.sh) o
-# variables de entorno:
+# Configuración, de menor a mayor prioridad: config.env junto a este script
+# (lo crea install.sh), .claude/html-temporal.env del proyecto (el primero
+# subiendo desde CLAUDE_PROJECT_DIR o la carpeta actual). Variables:
 #   TMP_HTML_DIR       carpeta servida por el web server
 #   TMP_HTML_BASE_URL  URL pública de esa carpeta, con / al final
 #   TMP_HTML_TTL_MIN   minutos de vida (default 60)
@@ -15,6 +16,19 @@ set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 [ -f "$here/config.env" ] && . "$here/config.env"
+
+# Config por proyecto: el primer .claude/html-temporal.env que aparezca
+# subiendo desde el proyecto (CLAUDE_PROJECT_DIR) o la carpeta actual pisa
+# la config global. Así cada proyecto publica en su propio dominio.
+project_cfg=""
+d="${CLAUDE_PROJECT_DIR:-$PWD}"
+while :; do
+	if [ -f "$d/.claude/html-temporal.env" ]; then project_cfg="$d/.claude/html-temporal.env"; break; fi
+	[ "$d" = "/" ] || [ -z "$d" ] && break
+	d="$(dirname "$d")"
+done
+# shellcheck disable=SC1090
+[ -n "$project_cfg" ] && . "$project_cfg"
 
 : "${TMP_HTML_DIR:?Falta TMP_HTML_DIR (corre install.sh o define la variable)}"
 : "${TMP_HTML_BASE_URL:?Falta TMP_HTML_BASE_URL}"
@@ -34,6 +48,7 @@ install -m 644 "$src" "$TMP_HTML_DIR/$name"
 url="${TMP_HTML_BASE_URL%/}/$name"
 
 echo "url: $url"
+[ -n "$project_cfg" ] && echo "config: $project_cfg"
 if command -v curl >/dev/null; then
 	echo "http: $(curl -s -o /dev/null -w '%{http_code}' "$url")"
 fi

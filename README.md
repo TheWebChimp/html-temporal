@@ -84,6 +84,17 @@ echo '<h1>hola</h1>' > /tmp/t.html && ~/.claude/skills/html-temporal/publish.sh 
 
 Si cambias la vida o la carpeta, ajusta también el `-mmin` y la ruta en el cron.
 
+### Un dominio por proyecto
+
+Con el skill instalado una sola vez para tu usuario, cada proyecto puede publicar en su propio dominio. Crea `.claude/html-temporal.env` en la raíz del proyecto con las mismas variables:
+
+```bash
+TMP_HTML_DIR="/var/www/mi-proyecto/.tmp-html"
+TMP_HTML_BASE_URL="https://mi-proyecto.com/tmp-html/"
+```
+
+`publish.sh` busca ese archivo subiendo desde `CLAUDE_PROJECT_DIR` (o la carpeta actual) y, si lo encuentra, pisa la config global. Cada carpeta necesita su propio alias en el web server y su línea de cron.
+
 ## Contenido
 
 ```
